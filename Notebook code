@@ -1,0 +1,39 @@
+import numpy as np
+from pylab import plot,xlabel,show,arange,array,legend
+greekv = 2
+alpha = 1
+mew = 2
+S = 8
+def f(r,t):
+    N = r[0]
+    E = r[1]
+    V = r[2]
+    fN = -E*N + S
+    fE = E*N - greekv*(E**2) - E*(V**2)
+    fV = alpha*E*V - mew*V
+    return array([fN,fE,fV],float)
+a = 0
+b = 5
+steps = 100000
+h = (b-a)/steps
+
+tpoints = arange(a,b,h)
+Epoints = []
+Npoints = []
+Vpoints = []
+
+r = array([(np.sqrt(S*greekv) + 0.01), ((np.sqrt(S/greekv)) + 0.01), 0.01],float)
+for t in tpoints:
+    Npoints.append(r[0])
+    Epoints.append(r[1])
+    Vpoints.append(r[2])
+    k1 = h*f(r,t)
+    k2 = h*f(r+0.5*k1,t+0.5*h)
+    k3 = h*f(r+0.5*k2,t+0.5*h)
+    k4 = h*f(r+k3,t+h)
+    r += (k1+2*k2+2*k3+k4)/6
+legend(('N','E'))
+plot(tpoints,Epoints)
+plot(tpoints,Npoints)
+xlabel("t")
+show()
